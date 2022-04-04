@@ -21,8 +21,27 @@
 				<tr>
 					<td><a href = "<%= request.getContextPath() %>/staffList.jsp">Staff List</a></td>
 				</tr>
+				<!-- view 7개 리스트 -->
 				<tr>
-					<td><a href = "<%= request.getContextPath() %>/actorInfoList.jsp">ActorInfo List</a></td>
+					<td><a href = "<%= request.getContextPath() %>/actorInfoList.jsp">actorInfo List (view)</a></td>
+				</tr>
+				<tr>
+					<td><a href = "<%= request.getContextPath() %>/customerListViewList.jsp">customerList List (view)</a></td>
+				</tr>
+				<tr>
+					<td><a href = "<%= request.getContextPath() %>/filmListViewList.jsp">filmList List (view)</a></td>
+				</tr>
+				<tr>
+					<td><a href = "<%= request.getContextPath() %>/nicerButSlowerFilmListViewList.jsp">nicerButSlowerFilmList List (view)</a></td>
+				</tr>
+				<tr>
+					<td><a href = "<%= request.getContextPath() %>/salesByFilmCategoryList.jsp">salesByFilmCategory List (view)</a></td>
+				</tr>
+				<tr>
+					<td><a href = "<%= request.getContextPath() %>/salesByStoreList.jsp">salesByStore List (view)</a></td>
+				</tr>
+				<tr>
+					<td><a href = "<%= request.getContextPath() %>/staffListViewList.jsp">staffList List (view)</a></td>
 				</tr>
 		</table>
 	</div>
