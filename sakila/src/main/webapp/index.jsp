@@ -21,6 +21,9 @@
 				<tr>
 					<td><a href = "<%= request.getContextPath() %>/staffList.jsp">Staff List</a></td>
 				</tr>
+				<tr>
+					<td><a href = "<%= request.getContextPath() %>/actorInfoList.jsp">ActorInfo List</a></td>
+				</tr>
 		</table>
 	</div>
 </div>
