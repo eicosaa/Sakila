@@ -3,6 +3,8 @@ package dao;
 import java.util.*;
 import java.sql.*;
 
+import util.DBUtil;
+
 public class StaffDao {
 	
 	public List<Map<String, Object>> selectStaffList() {
@@ -13,8 +15,7 @@ public class StaffDao {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try { // -클래스가 없으면 ClassNotFoundException이 발생하니 예외처리를 한다.
-			Class.forName("org.mariadb.jdbc.Driver");
-			conn = DriverManager.getConnection("jdbc:mariadb://localhost:3306/sakila", "root", "java1234");
+			conn = DBUtil.getConnection();
 			
 			String sql = "SELECT"
 					+ "		s1.staff_id staffId,"
