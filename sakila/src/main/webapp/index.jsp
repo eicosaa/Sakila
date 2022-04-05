@@ -43,6 +43,16 @@
 				<tr>
 					<td><a href = "<%= request.getContextPath() %>/staffListViewList.jsp">staffList List (view)</a></td>
 				</tr>
+				<!-- procedure 3개 결과 화면 -->
+				<tr>
+					<td><a href = "<%= request.getContextPath() %>/filmInStock.jsp">filmInStock (procedure)</a></td>
+				</tr>
+				<tr>
+					<td><a href = "<%= request.getContextPath() %>/filmNotInStock.jsp">filmNotInStock (procedure)</a></td>
+				</tr>
+				<tr>
+					<td><a href = "<%= request.getContextPath() %>/rewardsReport.jsp">rewardsReport (procedure)</a></td>
+				</tr>
 		</table>
 	</div>
 </div>
