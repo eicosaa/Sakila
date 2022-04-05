@@ -32,7 +32,7 @@ public class CustomerListViewDao {
 			    	c.setName(rs.getString("name"));
 			    	c.setAddress(rs.getString("address"));
 			    	c.setZipCode(rs.getString("zipCode"));
-			    	c.setPhone(rs.getInt("phone"));
+			    	c.setPhone(rs.getString("phone"));
 			    	c.setCity(rs.getString("city"));
 			    	c.setCountry(rs.getString("country"));
 			    	c.setNotes(rs.getString("notes"));

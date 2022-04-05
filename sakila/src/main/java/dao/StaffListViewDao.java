@@ -31,7 +31,7 @@ public class StaffListViewDao {
 			    	s.setName(rs.getString("name"));
 			    	s.setAddress(rs.getString("address"));
 			    	s.setZipCode(rs.getString("zipCode"));
-			    	s.setPhone(rs.getInt("phone"));
+			    	s.setPhone(rs.getString("phone"));
 			    	s.setCity(rs.getString("city"));
 			    	s.setCountry(rs.getString("country"));
 			    	s.setSid(rs.getInt("SID"));

@@ -10,7 +10,7 @@
 		currentPage = Integer.parseInt(request.getParameter("currentPage"));
 	}	
 	
-	int rowPerPage = 4; // -페이지 행의 수 (한 페이지에 나타낼 정보의 수) 
+	int rowPerPage = 10; // -페이지 행의 수 (한 페이지에 나타낼 정보의 수) 
 	int beginRow = (currentPage - 1) * rowPerPage; // -한 페이지를 시작할 행의 수
 	
 	// -Dao, vo 메서드 객체 생성

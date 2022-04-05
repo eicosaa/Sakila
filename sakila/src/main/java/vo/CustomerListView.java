@@ -5,7 +5,7 @@ public class CustomerListView {
 	private String name;
 	private String address;
 	private String zipCode;
-	private int phone;
+	private String phone;
 	private String city;
 	private String country;
 	private String notes;
@@ -22,7 +22,7 @@ public class CustomerListView {
 		return id;
 	}
 	public void setId(int id) {
-		id = id;
+		this.id = id;
 	}
 	public String getName() {
 		return name;
@@ -42,10 +42,10 @@ public class CustomerListView {
 	public void setZipCode(String zipCode) {
 		this.zipCode = zipCode;
 	}
-	public int getPhone() {
+	public String getPhone() {
 		return phone;
 	}
-	public void setPhone(int phone) {
+	public void setPhone(String phone) {
 		this.phone = phone;
 	}
 	public String getCity() {
