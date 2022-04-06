@@ -1,3 +1,4 @@
+<%@page import="vo.RewardsReport"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import = "java.util.*" %>
@@ -17,7 +18,8 @@
 
 	RewardsReportDao rrd = new RewardsReportDao();
 	Map<String, Object> map = rrd.rewardsReportCall(monthlyPurchases, dollarAmountPurchased);
-	List<String> list = (List<String>)map.get("list");
+	List<RewardsReport> list = (List<RewardsReport>)map.get("list");
+	//List<String> list = (List<String>)map.get("list");
 	count = (Integer)map.get("count");
 	
 	// -디버깅
@@ -61,15 +63,35 @@
 			
 			<div class="container p-3 my-3 bg-secondary text-white text-center">조건을 만족한 고객 정보</div>
 			<table class = "table table-bordered text-center table-hover">
-					<% 
-						for(String id : list) {
-				    %>
-				    		<tr>
-				   				<td> <%= id %> </td>
-				   			</tr>
-				    <% 
-					    } 
-				    %>
+				<tr class="bg-dark text-light">
+					<td>customerId</td>
+					<td>storeId</td>
+					<td>firstName</td>
+					<td>lastName</td>
+					<td>email</td>
+					<td>address</td>
+					<td>active</td>
+					<td>createDate</td>
+					<td>updateDate</td>
+				</tr>
+					
+				    <%
+						for(RewardsReport r : list) {
+					%>
+							<tr>
+								<td><%=r.getCustomerId()%></td>
+							    <td><%=r.getStoreId()%></td>
+							    <td><%=r.getFirstName()%></td>
+							    <td><%=r.getLastName()%></td>
+							    <td><%=r.getEmail()%></td>
+							    <td><%=r.getAddressId()%></td>
+							    <td><%=r.getActive()%></td>
+							    <td><%=r.getCreateDate()%></td>
+			      				<td><%=r.getLastUpdate()%></td>
+							</tr>
+					<%
+						}
+					%>
 			</table>
 	<%
 		} 
