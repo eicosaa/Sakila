@@ -42,6 +42,7 @@
 	System.out.println(list.size());
 	
 	// -디버깅 코드
+	System.out.println("[filmSearchAction.jsp] currentPage : " + currentPage);
 	System.out.println("[filmSearchAction.jsp] beginRow : " + beginRow);
 	System.out.println("[filmSearchAction.jsp] rowPerPage : " + rowPerPage);
 	System.out.println("[filmSearchAction.jsp] category : " + category);
@@ -101,13 +102,13 @@
 		<%
 			if(currentPage > 1) { 
 		%>
-				<a href="<%= request.getContextPath() %>/customerListViewList.jsp?currentPage=<%= currentPage - 1 %>" class = "btn btn-outline-secondary">이전</a>
+				<a href="<%= request.getContextPath() %>/filmSearchAction.jsp?currentPage=<%= currentPage - 1 %>&category=<%= category %>&rating=<%= rating %>&price=<%= price %>&length=<%= length %>&title=<%= title %>&actors=<%= actors %>" class="btn btn-outline-secondary">이전</a>
 		<%		
 			} 
 		
 			if(currentPage < lastPage) {
 		%>
-				<a href="<%= request.getContextPath() %>/customerListViewList.jsp?currentPage=<%= currentPage + 1 %>" class = "btn btn-outline-secondary">다음</a>
+				<a href="<%= request.getContextPath() %>/filmSearchAction.jsp?currentPage=<%= currentPage + 1 %>&category=<%= category %>&rating=<%= rating %>&price=<%= price %>&length=<%= length %>&title=<%= title %>&actors=<%= actors %>" class="btn btn btn-outline-secondary">다음</a>
 		<%		
 			}
 		%>

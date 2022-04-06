@@ -276,105 +276,192 @@ public class FilmDao {
 		
 		conn = DBUtil.getConnection(); // -mariaDb 드라이버 연결
 		
-		
 		try {
 			// -전체 행을 구하는 쿼리
-			String sql = null;
+			// 동적쿼리
+			String sql = "SELECT COUNT(*) cnt FROM film_list WHERE title LIKE ? AND actors LIKE ?";
 			
 			// -1. 아무것도 선택하지 않았을 때-----------------------
 			if(category.equals("") && rating.equals("") && price == -1 && length == -1) { // -아무것도 입력되지 않았다
-				sql = "SELECT count(*) cnt FROM film_list";
 				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%" + title + "%");
+				stmt.setString(2, "%" + actors + "%");
 			} 
 			
 			// -2. 영화 시간(length)만 선택했을 때------------------
 			else if(category.equals("") && rating.equals("") && price == -1 && length != -1) { // length만 입력되었다
-				sql = "SELECT count(*) cnt FROM film_list";
+				if(length == 0) {
+					sql += " AND length < 60"; 
+				} else if(length == 1) {
+					sql += " AND length >= 60";
+				}
 				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%" + title + "%"); // -title 검색어
+				stmt.setString(2, "%" + actors + "%"); // -actor 검색어
 			} 
 			
 			// -3. 가격(price)만 선택했을 때----------------------
 			else if(category.equals("") && rating.equals("") && price != -1 && length == -1) { // -price만 입력되었다
-				sql = "SELECT count(*) cnt FROM film_list";
+				sql += " AND price = ?";
 				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%" + title + "%"); // -title 검색어
+				stmt.setString(2, "%" + actors + "%"); // -actor 검색어
+				stmt.setDouble(3, price);
 			} 
 			
 			// -4. 등급(rating)만 선택했을 때 -------------------
 			else if(category.equals("") && !rating.equals("") && price == -1 && length == -1) { // -rating만 입력되었다
-				sql = "SELECT count(*) cnt FROM film_list";
+				sql += " AND rating = ?"; // -앞에 빈칸이 있어야 한다.
 				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%" + title + "%"); // -title(제목) 검색어
+				stmt.setString(2, "%" + actors + "%"); // -actor(배우) 검색어
+				stmt.setString(3, rating); // -rating(등급) 검색어
 			} 
 			
 			// -5. 목록(category)만 선택했을 때 -----------------
 			else if(!category.equals("") && rating.equals("") && price == -1 && length == -1) { // -category만 입력되었다
-				sql = "SELECT count(*) cnt FROM film_list";
+				sql += " AND category = ?";
 				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%" + title + "%"); // -title(제목) 검색어
+				stmt.setString(2, "%" + actors + "%"); // -actor(배우) 검색어
+				stmt.setString(3, category); // -category(목록) 검색어
 			} 
 			
 			// -6. 목록(category), 등급(rating)만 선택했을 때-------------------------
 			else if(!category.equals("") && !rating.equals("") && price == -1 && length == -1) { // -category, rating만 입력되었다
-				sql = "SELECT count(*) cnt FROM film_list";
-				stmt = conn.prepareStatement(sql);;
+				sql += " AND category = ? AND rating = ?";
+				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%" + title + "%"); // -title(제목) 검색어
+				stmt.setString(2, "%" + actors + "%"); // -actor(배우) 검색어
+				stmt.setString(3, category); // -category(목록) 검색어
+				stmt.setString(4, rating); // -rating(등급) 검색어
 			} 
 			
 			// -7. 목록(category), 가격(price)만 선택했을 때 -------------------------
 			else if(!category.equals("") && rating.equals("") && price != -1 && length == -1) { // -category, price만 입력되었다
-				sql = "SELECT count(*) cnt FROM film_list";
+				sql += " AND category = ? AND price = ?";
 				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%" + title + "%"); // -title(제목) 검색어
+				stmt.setString(2, "%" + actors + "%"); // -actor(배우) 검색어
+				stmt.setString(3, category); // -category(목록) 검색어
+				stmt.setDouble(4, price); // -price(가격) 검색어
 			} 
 			
 			// -8. 목록(category), 영화 시간(length)만 선택했을 때 --------------------
 			else if(!category.equals("") && rating.equals("") && price == -1 && length != -1) { // -category, length만 입력되었다
-				sql = "SELECT count(*) cnt FROM film_list";
+				if(length == 0) { // -1시간 미만 선택
+					sql += " AND length < 60 AND category = ?"; 
+				} else if(length == 1) { // -1시간 이상 선택
+					sql += " AND length >= 60 AND category = ?";
+				}
 				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%" + title + "%"); // -title(제목) 검색어
+				stmt.setString(2, "%" + actors + "%"); // -actor(배우) 검색어
+				stmt.setString(3, category); // -category(목록) 검색어
 			} 
 			
 			// -9. 목록(category), 등급(rating), 가격(price)만 선택했을 때 -------------
 			else if(!category.equals("") && !rating.equals("") && price != -1 && length == -1) { // -category, rating, price만 입력되었다
-				sql = "SELECT count(*) cnt FROM film_list";
+				sql += " AND category = ? AND rating = ? AND price = ?";
 				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%" + title + "%"); // -title(제목) 검색어
+				stmt.setString(2, "%" + actors + "%"); // -actor(배우) 검색어
+				stmt.setString(3, category); // -category(목록) 검색어
+				stmt.setString(4, rating); // -rating(등급) 검색어
+				stmt.setDouble(5, price); // -price(가격) 검색어
 			} 
 			
 			// -10. 목록(category), 등급(rating), 영화 시간(length)만 선택했을 때 -------
 			else if(!category.equals("") && !rating.equals("") && price == -1 && length != -1) { // -category, rating, length만 입력되었다
-				sql = "SELECT count(*) cnt FROM film_list";
+				if(length == 0) { // -1시간 미만 선택
+					sql += " AND length < 60 AND category = ? AND rating = ?"; 
+				} else if(length == 1) { // -1시간 이상 선택
+					sql += " AND length >= 60 AND category = ? AND rating = ?";
+				}
 				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%" + title + "%"); // -title(제목) 검색어
+				stmt.setString(2, "%" + actors + "%"); // -actor(배우) 검색어
+				stmt.setString(3, category); // -category(목록) 검색어
+				stmt.setString(4, rating); // -rating(등급) 검색어
 			} 
 			
 			// -11. 목록(category), 가격(price), 영화 시간(length)만 선택했을 때---------
 			else if(!category.equals("") && rating.equals("") && price != -1 && length != -1) { // -category, price, length만 입력되었다
-				sql = "SELECT count(*) cnt FROM film_list";
+				if(length == 0) { // -1시간 미만 선택
+					sql += " AND length < 60 AND category = ? AND price = ?"; 
+				} else if(length == 1) { // -1시간 이상 선택
+					sql += " AND length >= 60 AND category = ? AND rating = ?";
+				}
 				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%" + title + "%"); // -title(제목) 검색어
+				stmt.setString(2, "%" + actors + "%"); // -actor(배우) 검색어
+				stmt.setString(3, category); // -category(목록) 검색어
+				stmt.setDouble(4, price); // -price(가격) 검색어
 			} 
 			
 			// -12. 등급(rating), 가격(price)만 선택했을 때 --------------------------
 			else if(category.equals("") && !rating.equals("") && price != -1 && length == -1) { // -rating, price만 입력되었다
-				sql = "SELECT count(*) cnt FROM film_list";
+				sql += " AND rating = ? AND price = ?";
 				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%" + title + "%"); // -title(제목) 검색어
+				stmt.setString(2, "%" + actors + "%"); // -actor(배우) 검색어
+				stmt.setString(3, rating); // -rating(등급) 검색어
+				stmt.setDouble(4, price); // -price(가격) 검색어
 			} 
 			
 			// -13. 등급(rating), 영화 시간(length)만 선택했을 때 ---------------------
 			else if(category.equals("") && !rating.equals("") && price == -1 && length != -1) { // -rating, length만 입력되었다
-				sql = "SELECT count(*) cnt FROM film_list";
+				if(length == 0) { // -1시간 미만 선택
+					sql += " AND length < 60 AND rating = ?"; 
+				} else if(length == 1) { // -1시간 이상 선택
+					sql += " AND length >= 60 AND rating = ?";
+				}
 				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%" + title + "%"); // -title(제목) 검색어
+				stmt.setString(2, "%" + actors + "%"); // -actor(배우) 검색어
+				stmt.setString(3, rating); // -rating(등급) 검색어
 			} 
 			
 			// -14. 등급(rating), 가격(price), 영화 시간(length)만 선택했을 때-----------
 			else if(category.equals("") && !rating.equals("") && price != -1 && length != -1) { // -rating, price, length만 입력되었다
-				sql = "SELECT count(*) cnt FROM film_list";
+				if(length == 0) { // -1시간 미만 선택
+					sql += " AND length < 60 AND rating = ? AND price = ?"; 
+				} else if(length == 1) { // -1시간 이상 선택
+					sql += " AND length >= 60 AND rating = ? AND price = ?";
+				}
 				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%" + title + "%"); // -title(제목) 검색어
+				stmt.setString(2, "%" + actors + "%"); // -actor(배우) 검색어
+				stmt.setString(3, rating); // -rating(등급) 검색어
+				stmt.setDouble(4, price); // -price(가격) 검색어
 			} 
 			
 			// -15. 가격(price), 영화 시간(length)만 선택했을 때-----------------------
 			else if(category.equals("") && rating.equals("") && price != -1 && length != -1) { // -price, length만 입력되었다
-				sql = "SELECT count(*) cnt FROM film_list";
+				if(length == 0) { // -1시간 미만 선택
+					sql += " AND length < 60 AND price = ? ORDER BY fid LIMIT ?, ?"; 
+				} else if(length == 1) { // -1시간 이상 선택
+					sql += " AND length >= 60 AND price = ? ORDER BY fid LIMIT ?, ?";
+				}
 				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%" + title + "%"); // -title(제목) 검색어
+				stmt.setString(2, "%" + actors + "%"); // -actor(배우) 검색어
+				stmt.setDouble(3, price); // -price(가격) 검색어
 			} 
 			
 			// -16. 모두 선택했을 때 -----------------------------------------------
 			else if(!category.equals("") && !rating.equals("") && price != -1 && length != -1) { // -price, length만 입력되었다
-				sql = "SELECT count(*) cnt FROM film_list";
+				if(length == 0) { // -1시간 미만 선택
+					sql += " AND length < 60 AND category = ? AND rating = ? AND price = ?"; 
+				} else if(length == 1) { // -1시간 이상 선택
+					sql += " AND length >= 60 AND category = ? AND rating = ? AND price = ?";
+				}
 				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%" + title + "%"); // -title(제목) 검색어
+				stmt.setString(2, "%" + actors + "%"); // -actor(배우) 검색어
+				stmt.setString(4, category); // -category(목록) 검색어
+				stmt.setString(5, rating); // -rating(등급) 검색어
+				stmt.setDouble(6, price); // -price(가격) 검색어
 			}
 			
 			rs = stmt.executeQuery();
