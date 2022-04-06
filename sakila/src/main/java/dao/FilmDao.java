@@ -13,8 +13,67 @@ import java.util.Map;
 
 import util.DBUtil;
 import vo.Category;
+import vo.FilmListView;
 
 public class FilmDao {
+	
+	// -영화 검색
+	public List<FilmListView> selectFilmListSearch(int beginRow, int rowPerPage, String category, String rating, double price, int length, String title, String actors) {
+
+		List<FilmListView> list = new ArrayList<FilmListView>();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		conn = DBUtil.getConnection();
+		// -쿼리의 분기로 ?값이 동일하지 않으므로 stmt도 분기 필요
+		try {
+			// 동적쿼리
+			String sql = "SELECT fid, title, description, category, price, length, rating, actors FROM film_list WHERE title LIKE ? AND actors LIKE ?";
+			if(category.equals("") && rating.equals("") && price == -1 && length == -1) {
+				sql += " ORDER BY fid LIMIT ?, ?"; // -앞에 빈칸이 있어야 한다.
+				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%" + title + "%");
+				stmt.setString(2, "%" + actors + "%");
+				stmt.setInt(3, beginRow);
+				stmt.setInt(4, rowPerPage);
+			} else if(category.equals("") && rating.equals("") && price == -1 && length != -1) { // length만 입력되었다
+				if(length == 0) {
+					sql += " AND length<60 ORDER BY fid LIMIT ?, ?"; 
+				} else if(length == 1) {
+					sql += " AND length>=60 ORDER BY fid LIMIT ?, ?";
+				}
+				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%" + title + "%"); // -title 검색어
+				stmt.setString(2, "%" + actors + "%"); // -actor 검색어
+				stmt.setInt(3, beginRow);
+				stmt.setInt(4, rowPerPage);
+			} else if(category.equals("") && rating.equals("") && price != -1 && length == -1) { // -price만 입력되었다
+				sql += " AND price=? ORDER BY fid LIMIT ?, ?";
+				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%" + title + "%"); // -title 검색어
+				stmt.setString(2, "%" + actors + "%"); // -actor 검색어
+				stmt.setDouble(3, price);
+				stmt.setInt(4, beginRow);
+				stmt.setInt(5, rowPerPage);
+			} 
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				FilmListView f = new FilmListView();
+				f.setFid(rs.getInt("fid"));
+				f.setTitle(rs.getString("title"));
+				f.setDescription(rs.getString("description"));
+				f.setCategory(rs.getString("category"));
+				f.setPrice(rs.getDouble("price"));
+				f.setLength(rs.getInt("length"));
+				f.setRating(rs.getString("rating"));
+				f.setActors(rs.getString("actors"));
+				list.add(f);
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
 	
 	public List<Double> selectFilmPriceList() {
 		List<Double> list = new ArrayList<Double>();
