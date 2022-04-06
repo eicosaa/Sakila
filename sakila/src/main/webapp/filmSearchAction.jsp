@@ -3,6 +3,17 @@
 <%@ page import = "vo.*" %>
 <%@ page import = "dao.*" %>
 <%
+	int currentPage = 1; // -현재 페이지 변수 생성 및 초기화 
+	
+	System.out.println("[filmSearchAction.jsp] currentPage : " + currentPage);		
+	if(request.getParameter("currentPage") != null) { // 이전 다음 링크를 통해서 왔다면 아래 블록 실행
+		currentPage = Integer.parseInt(request.getParameter("currentPage"));
+	}	
+	
+	int rowPerPage = 10; // -페이지 행의 수 (한 페이지에 나타낼 정보의 수)  
+	int beginRow = (currentPage - 1) * rowPerPage; // -한 페이지를 시작할 행의 수
+	// 시작하는 페이지의 숫자 현재페이지가 변경되면 beginRow가 변경됨
+	
 	String category = request.getParameter("category");
 	String rating = request.getParameter("rating");
 	double price = -1; // price데이터가 입력되지 않았을 때 -0이라는 값이 존재할 수 있으므로 -1로 초기화
@@ -16,11 +27,18 @@
 	String title = request.getParameter("title");
 	String actors = request.getParameter("actors");
 	
-	int beginRow = 1;
-	int rowPerPage = 10;
-	
 	FilmDao filmDao = new FilmDao();
-	List<FilmListView> list = filmDao.selectFilmListSearch(beginRow ,rowPerPage ,category, rating, price, length, title, actors);
+	
+	int totalRow = filmDao.selectFilmSearchTotalRow(category, rating, price, length, title, actors); // -전체 행의 개수
+	int lastPage = 0; // -마지막 페이지 수
+	
+	if (totalRow % rowPerPage == 0) {
+		lastPage = totalRow / rowPerPage;
+	} else {  
+		lastPage = (totalRow / rowPerPage) + 1;
+	}
+	
+	List<FilmListView> list = filmDao.selectFilmListSearch(beginRow, rowPerPage, category, rating, price, length, title, actors);
 	System.out.println(list.size());
 	
 	// -디버깅 코드
@@ -50,6 +68,17 @@
 		</h1>
 		
 	<table class = "table table-bordered text-center table-hover">
+	
+		<tr>
+			<td>FID</td>
+			<td>Title</td>
+			<td>Description</td>
+			<td>Category</td>
+			<td>Price</td>
+			<td>Length</td>
+			<td>Rating</td>
+			<td>Actors</td>
+		</tr>
 		<%
 			for(FilmListView f : list) {
 		%>
@@ -67,5 +96,21 @@
 			}
 		%>
 	</table>
+	<!-- 페이지 버튼 -->
+	<div>
+		<%
+			if(currentPage > 1) { 
+		%>
+				<a href="<%= request.getContextPath() %>/customerListViewList.jsp?currentPage=<%= currentPage - 1 %>" class = "btn btn-outline-secondary">이전</a>
+		<%		
+			} 
+		
+			if(currentPage < lastPage) {
+		%>
+				<a href="<%= request.getContextPath() %>/customerListViewList.jsp?currentPage=<%= currentPage + 1 %>" class = "btn btn-outline-secondary">다음</a>
+		<%		
+			}
+		%>
+	</div>
 </body>
 </html>
