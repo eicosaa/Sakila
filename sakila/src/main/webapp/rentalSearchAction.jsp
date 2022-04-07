@@ -10,14 +10,35 @@
 		storeId = Integer.parseInt(request.getParameter("storeId"));
 	}
 	
-	RentalDao rentalDao = new RentalDao();
-	List<Map<String, Object>> list = rentalDao.selectRentalSearchList(storeId, customerName, beginDate, endDate);
-	
 	// -디버깅 코드
 	System.out.println("[rentalSearchAction.jsp] storeId : " + storeId);
 	System.out.println("[rentalSearchAction.jsp] customerName : " + customerName);
 	System.out.println("[rentalSearchAction.jsp] beginDate : " + beginDate);
 	System.out.println("[rentalSearchAction.jsp] endDate : " + endDate);
+	System.out.println("------------------------------------------------------------");
+	
+	// -페이징
+	int currentPage = 1; // -현재 페이지 변수 생성 및 초기화 
+	if(request.getParameter("currentPage") != null) { // 이전 다음 링크를 통해서 왔다면 아래 블록 실행
+		currentPage = Integer.parseInt(request.getParameter("currentPage"));
+	}
+	int rowPerPage = 10; // -페이지 행의 수 (한 페이지에 나타낼 정보의 수)  
+	int beginRow = (currentPage - 1) * rowPerPage; // -한 페이지를 시작할 행의 수
+	// 시작하는 페이지의 숫자 현재페이지가 변경되면 beginRow가 변경됨
+	
+	RentalDao rentalDao = new RentalDao();
+	List<Map<String, Object>> list = rentalDao.selectRentalSearchList(storeId, customerName, beginDate, endDate, beginRow, rowPerPage);
+	
+	int totalRow = rentalDao.rentalSearchTotalRow(storeId, customerName, beginDate, endDate); // -전체 행의 개수 
+	int lastPage = (int)(Math.ceil((double)totalRow/(double)rowPerPage)); // -마지막 페이지 수
+	
+	// -디버깅 코드
+	System.out.println("[rentalSearchAction.jsp] currentPage : " + currentPage);
+	System.out.println("[rentalSearchAction.jsp] rowPerPage : " + rowPerPage);
+	System.out.println("[rentalSearchAction.jsp] beginRow : " + beginRow);
+	System.out.println("[rentalSearchAction.jsp] totalRow : " + totalRow);
+	System.out.println("[rentalSearchAction.jsp] lastPage : " + lastPage);
+	System.out.println("************************************************************");
 %>
 <!DOCTYPE html>
 <html>
@@ -67,6 +88,22 @@
 			%>
 		</tbody>
 	</table>
+	<!-- 페이지 버튼 -->
+	<div>
+		<%
+			if(currentPage > 1) { 
+		%>
+				<a href="<%= request.getContextPath() %>/rentalSearchAction.jsp?currentPage=<%= currentPage - 1 %>&customerName=<%= customerName %>&storeId=<%= storeId %>&beginDate=<%= beginDate %>&endDate=<%= endDate %>" class="btn btn-outline-secondary">이전</a>
+		<%		
+			} 
+		
+			if(currentPage < lastPage) {
+		%>
+				<a href="<%= request.getContextPath() %>/rentalSearchAction.jsp?currentPage=<%= currentPage + 1 %>&customerName=<%= customerName %>&storeId=<%= storeId %>&beginDate=<%= beginDate %>&endDate=<%= endDate %>" class="btn btn btn-outline-secondary">다음</a>
+		<%		
+			}
+		%>
+	</div>
 </div>
 </body>
 </html>

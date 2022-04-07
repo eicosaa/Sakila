@@ -13,8 +13,83 @@ import util.DBUtil;
 
 public class RentalDao {
 	
+	// -rentalSearch 전체 행의 개수를 구하는 메서드
+	public int rentalSearchTotalRow(int storeId, String customerName, String beginDate, String endDate) {
+		int totalRow = 0; // -전체 행의 수를 넣을 int타입 변수 생성 및 초기화
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		conn = DBUtil.getConnection();
+		
+		try {
+			// 동적쿼리
+			String sql = "SELECT"
+					+ "		count(*) cnt"
+					+ "	  FROM rental r INNER JOIN customer c"
+					+ "	  ON r.customer_id = c.customer_id"
+					+ "		INNER JOIN staff s"
+					+ "		ON r.staff_id = s.staff_id"
+					+ "		   INNER JOIN inventory i"
+					+ "		      ON r.inventory_id = i.inventory_id"
+					+ "		         INNER JOIN film f"
+					+ "		         ON i.film_id = f.film_id"
+					+ " WHERE CONCAT(c.first_name, ' ', c.last_name) LIKE ?";
+			
+			// -1. 가게만 검색했을 때 (storeId)--------------------------------------
+			if(storeId != -1 && beginDate.equals("") && endDate.equals("")) { // -가게 번호만 입력되었다
+				sql += " AND s.store_id = ?"; // -앞에 빈칸이 있어야 한다.
+				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%" + customerName + "%");
+				stmt.setInt(2, storeId);
+			} 
+			
+			// -2. 대여 날짜만 검색했을 때 (beginDate, endDate)-----------------------
+			else if(storeId == -1 && !beginDate.equals("") && !endDate.equals("")) { // -대여 날짜만 입력되었다
+				sql += " AND r.rental_date BETWEEN STR_TO_DATE(?, '%Y-%m-%d') AND STR_TO_DATE(?, '%Y-%m-%d')";
+				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%" + customerName + "%");
+				stmt.setString(2, beginDate);
+				stmt.setString(3, endDate);
+			}
+			
+			// -3. 가게, 대여 날짜만 검색했을 때 (storeId, beginDate, endDate)---------
+			else if(storeId != -1 && !beginDate.equals("") && !endDate.equals("")) { // -가게, 대여 날짜만 입력되었다
+				sql += " AND s.store_id = ? AND r.rental_date BETWEEN STR_TO_DATE(?, '%Y-%m-%d') AND STR_TO_DATE(?, '%Y-%m-%d')";
+				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%" + customerName + "%");
+				stmt.setInt(2, storeId);
+				stmt.setString(3, beginDate);
+				stmt.setString(4, endDate);
+			}
+			
+			// -4. 아무것도 입력하지 않았을 때-----------------------------------------
+			else if(storeId == -1 && beginDate.equals("") && endDate.equals("")) { // -아무것도 입력되지 않았다.
+				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, "%" + customerName + "%");
+			}
+			
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				totalRow = rs.getInt("cnt");
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				// -DB 자원 반환
+				rs.close();
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return totalRow;
+	}
+	
 	public List<Map<String, Object>> selectRentalSearchList(
-		int storeId, String customerName, String beginDate, String endDate) {
+		int storeId, String customerName, String beginDate, String endDate, int beginRow, int rowPerPage) {
 		
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		
@@ -61,35 +136,44 @@ public class RentalDao {
 			
 			// -1. 가게만 검색했을 때 (storeId)--------------------------------------
 			if(storeId != -1 && beginDate.equals("") && endDate.equals("")) { // -가게 번호만 입력되었다
-				sql += " AND s.store_id = ?"; // -앞에 빈칸이 있어야 한다.
+				sql += " AND s.store_id = ? ORDER BY rental_date LIMIT ?, ?"; // -앞에 빈칸이 있어야 한다.
 				stmt = conn.prepareStatement(sql);
 				stmt.setString(1, "%" + customerName + "%");
 				stmt.setInt(2, storeId);
+				stmt.setInt(3, beginRow);
+				stmt.setInt(4, rowPerPage);
 			} 
 			
 			// -2. 대여 날짜만 검색했을 때 (beginDate, endDate)-----------------------
 			else if(storeId == -1 && !beginDate.equals("") && !endDate.equals("")) { // -대여 날짜만 입력되었다
-				sql += " AND r.rental_date BETWEEN STR_TO_DATE(?, '%Y-%m-%d') AND STR_TO_DATE(?, '%Y-%m-%d')";
+				sql += " AND r.rental_date BETWEEN STR_TO_DATE(?, '%Y-%m-%d') AND STR_TO_DATE(?, '%Y-%m-%d') ORDER BY rental_date LIMIT ?, ?";
 				stmt = conn.prepareStatement(sql);
 				stmt.setString(1, "%" + customerName + "%");
 				stmt.setString(2, beginDate);
 				stmt.setString(3, endDate);
+				stmt.setInt(5, beginRow);
+				stmt.setInt(6, rowPerPage);
 			}
 			
 			// -3. 가게, 대여 날짜만 검색했을 때 (storeId, beginDate, endDate)---------
 			else if(storeId != -1 && !beginDate.equals("") && !endDate.equals("")) { // -가게, 대여 날짜만 입력되었다
-				sql += " AND s.store_id = ? AND r.rental_date BETWEEN STR_TO_DATE(?, '%Y-%m-%d') AND STR_TO_DATE(?, '%Y-%m-%d')";
+				sql += " AND s.store_id = ? AND r.rental_date BETWEEN STR_TO_DATE(?, '%Y-%m-%d') AND STR_TO_DATE(?, '%Y-%m-%d') ORDER BY rental_date LIMIT ?, ?";
 				stmt = conn.prepareStatement(sql);
 				stmt.setString(1, "%" + customerName + "%");
 				stmt.setInt(2, storeId);
 				stmt.setString(3, beginDate);
 				stmt.setString(4, endDate);
+				stmt.setInt(5, beginRow);
+				stmt.setInt(6, rowPerPage);
 			}
 			
 			// -4. 아무것도 입력하지 않았을 때-----------------------------------------
 			else if(storeId == -1 && beginDate.equals("") && endDate.equals("")) { // -아무것도 입력되지 않았다.
+				sql += " ORDER BY rental_date LIMIT ?, ?";
 				stmt = conn.prepareStatement(sql);
 				stmt.setString(1, "%" + customerName + "%");
+				stmt.setInt(2, beginRow);
+				stmt.setInt(3, rowPerPage);
 			}
 			
 			rs = stmt.executeQuery();
@@ -110,6 +194,15 @@ public class RentalDao {
 			}
 		} catch(SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				// -DB 자원 반환
+				rs.close();
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		return list;
 	}
@@ -121,11 +214,12 @@ public class RentalDao {
 		String customerName = "JOEL"; // -고객 이름
 		String beginDate = "2005-07-01"; // -빌린 날짜
 		String endDate = "2005-07-30"; // -빌린 날짜
+		int beginRow = 0;
+		int rowPerPage = 0;
 		
 		RentalDao rentalDao = new RentalDao();
 		
-		
-		List<Map<String, Object>> list = rentalDao.selectRentalSearchList(storeId, customerName, beginDate, endDate);
+		List<Map<String, Object>> list = rentalDao.selectRentalSearchList(storeId, customerName, beginDate, endDate, beginRow, rowPerPage);
 		
 		for(Map<String, Object> m : list) {
 			System.out.println("[rentalDao.selectRentalSearchList] rentalId : " + m.get("rentalId"));
