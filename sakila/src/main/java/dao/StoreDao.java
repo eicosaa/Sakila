@@ -7,6 +7,14 @@ import util.DBUtil;
 
 public class StoreDao {
 	
+	// - storeId를 가져오는 메서드
+	public List<Integer> selectStoreIdList() {
+		List<Integer> list = new ArrayList<Integer>();
+		// 
+		
+		return list;
+	}
+	
 	public List<Map<String, Object>> selectStoreList() {
 		// ArrayList는 List 인터페이스의 구현체 중 하나이다.
 		// HashMap은 Map 인터페이스의 구현체 중 하나이다.
@@ -15,7 +23,7 @@ public class StoreDao {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try { // -클래스가 없으면 ClassNotFoundException이 발생하니 예외처리를 한다.
-			conn = DBUtil.getConnection();
+			conn = DBUtil.getConnection(); 
 			
 			String sql = "SELECT"
 					+ "		s1.store_id storeId,"

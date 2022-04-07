@@ -53,6 +53,12 @@
 				<tr>
 					<td><a href = "<%= request.getContextPath() %>/rewardsReport.jsp">rewardsReport (procedure)</a></td>
 				</tr>
+				<tr>
+					<td><a href = "<%= request.getContextPath() %>/filmSearchForm.jsp">필름 상세 검색</a></td>
+				</tr>
+				<tr>
+					<td><a href = "<%= request.getContextPath() %>/rentalSearchForm.jsp">대여 상세 검색</a></td>
+				</tr>
 		</table>
 	</div>
 </div>
