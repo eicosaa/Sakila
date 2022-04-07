@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import = "dao.*" %>
+<%@ page import = "vo.*" %>
 <%@ page import = "java.util.*" %>
 <%
 	StoreDao storeDao = new StoreDao();
-	List<Integer> storeIdList = storeDao.selectStoreIdList();
+	List<Store> storeIdList = storeDao.selectStoreIdList();
 %>
 <!DOCTYPE html>
 <html>
@@ -26,10 +27,11 @@
 			<tr>
 				<td>store ID</td>
 				<td>
+					<div><input type="radio" name="storeId" class = "form-check-input" value="" checked="checked">선택안함</div>
 					<%
-						for(int i : storeIdList) {
+						for(Store i : storeIdList) {
 					%>
-							<div><input type = "radio" name = "storeId"  class = "form-control" value = "<%= i %>"><%= i %>번 가게</div>
+							<div><input type = "radio" name = "storeId" class = "form-check-input" value = "<%= i.getStoreId() %>"> <%= i.getStoreId() %>번 가게</div>
 					<%
 						}
 					%>
@@ -44,9 +46,10 @@
 			</tr>
 			<!-- 대여 일자 -->
 			<tr>
-				<td>lent Date</td>
+				<td>rent Date</td>
 				<td>
-					<input type = "date" name = "beginDate"  class = "form-control"> ~ <input type = "date" name = "endDate"  class = "form-control">
+					begin date <input type = "date" name = "beginDate"  class = "form-control">
+					end date <input type = "date" name = "endDate"  class = "form-control">
 				</td>
 			</tr>
 			<tr>
@@ -54,5 +57,6 @@
 			</tr>
 		</table>
 	</form>
+</div>
 </body>
 </html>

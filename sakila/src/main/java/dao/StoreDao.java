@@ -4,13 +4,41 @@ import java.util.*;
 import java.sql.*;
 
 import util.DBUtil;
+import vo.Store;
 
 public class StoreDao {
 	
 	// - storeId를 가져오는 메서드
-	public List<Integer> selectStoreIdList() {
-		List<Integer> list = new ArrayList<Integer>();
-		// 
+	public List<Store> selectStoreIdList() {
+		List<Store> list = new ArrayList<Store>();
+		// List<Integer> list = new ArrayList<Integer>();
+		
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		conn = DBUtil.getConnection(); 
+		
+		try {
+			String sql = "SELECT store_id storeId FROM store;";
+			stmt = conn.prepareStatement(sql);
+		    rs = stmt.executeQuery();
+		    while(rs.next()) {
+		    	Store s = new Store();
+			 	s.setStoreId(rs.getInt("storeId"));
+		    	list.add(s);
+		    }
+		} catch (Exception e) { 
+			e.printStackTrace();
+		} finally {
+			// DB자원 해지
+			try {
+				rs.close();
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 		
 		return list;
 	}
@@ -76,7 +104,7 @@ public class StoreDao {
 			System.out.println(m.get("staffName") + ", ");
 			System.out.println(m.get("addressId") + ", ");
 			System.out.println(m.get("staffAddress") + ", ");
-			System.out.println(m.get("lastUpdate") + ", ");
+			System.out.println(m.get("lastUpdate"));
 			System.out.println("");
 		}
 	}
