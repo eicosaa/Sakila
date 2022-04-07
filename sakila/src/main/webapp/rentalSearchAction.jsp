@@ -1,11 +1,16 @@
+<%@ page import="java.text.SimpleDateFormat"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import = "java.util.*" %>
 <%@ page import = "dao.*" %>
 <%
+	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd"); // 현재 날짜 yyyy-MM-dd 형식으로 불러오기
+	Date now = new Date();
+
 	int storeId = -1; // -storeId가 입력되지 않았을 때
 	String customerName = request.getParameter("customerName");
 	String beginDate = request.getParameter("beginDate");
 	String endDate = request.getParameter("endDate");
+	// String endDate = format.format(now); // 디폴트 값을 현재 날짜로 설정
 	if(!request.getParameter("storeId").equals("")) { // -storeId가 입력되었을 때
 		storeId = Integer.parseInt(request.getParameter("storeId"));
 	}
@@ -17,6 +22,8 @@
 	System.out.println("[rentalSearchAction.jsp] endDate : " + endDate);
 	System.out.println("------------------------------------------------------------");
 	
+	
+	
 	// -페이징
 	int currentPage = 1; // -현재 페이지 변수 생성 및 초기화 
 	if(request.getParameter("currentPage") != null) { // 이전 다음 링크를 통해서 왔다면 아래 블록 실행
@@ -24,7 +31,7 @@
 	}
 	int rowPerPage = 10; // -페이지 행의 수 (한 페이지에 나타낼 정보의 수)  
 	int beginRow = (currentPage - 1) * rowPerPage; // -한 페이지를 시작할 행의 수
-	// 시작하는 페이지의 숫자 현재페이지가 변경되면 beginRow가 변경됨
+	// 시작하는 페이지의 숫자 현재 페이지가 변경되면 beginRow가 변경됨
 	
 	RentalDao rentalDao = new RentalDao();
 	List<Map<String, Object>> list = rentalDao.selectRentalSearchList(storeId, customerName, beginDate, endDate, beginRow, rowPerPage);

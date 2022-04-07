@@ -36,7 +36,7 @@ public class RentalDao {
 					+ " WHERE CONCAT(c.first_name, ' ', c.last_name) LIKE ?";
 			
 			// -1. 가게만 검색했을 때 (storeId)--------------------------------------
-			if(storeId != -1 && beginDate.equals("") && endDate.equals("")) { // -가게 번호만 입력되었다
+			if(storeId != -1 && beginDate.equals("") || endDate.equals("")) { // -가게 번호만 입력되었다
 				sql += " AND s.store_id = ?"; // -앞에 빈칸이 있어야 한다.
 				stmt = conn.prepareStatement(sql);
 				stmt.setString(1, "%" + customerName + "%");
@@ -52,8 +52,8 @@ public class RentalDao {
 				stmt.setString(3, endDate);
 			}
 			
-			// -3. 가게, 대여 날짜만 검색했을 때 (storeId, beginDate, endDate)---------
-			else if(storeId != -1 && !beginDate.equals("") && !endDate.equals("")) { // -가게, 대여 날짜만 입력되었다
+			// -3. 가게, 대여 날짜 모두 검색했을 때 (storeId, beginDate, endDate)---------
+			else if(storeId != -1 && !beginDate.equals("") && !endDate.equals("")) { // -가게, 대여 날짜 모두 입력되었다 
 				sql += " AND s.store_id = ? AND r.rental_date BETWEEN STR_TO_DATE(?, '%Y-%m-%d') AND STR_TO_DATE(?, '%Y-%m-%d')";
 				stmt = conn.prepareStatement(sql);
 				stmt.setString(1, "%" + customerName + "%");
@@ -155,7 +155,7 @@ public class RentalDao {
 				stmt.setInt(6, rowPerPage);
 			}
 			
-			// -3. 가게, 대여 날짜만 검색했을 때 (storeId, beginDate, endDate)---------
+			// -3. 가게, 대여 날짜 모두 검색했을 때 (storeId, beginDate, endDate)---------
 			else if(storeId != -1 && !beginDate.equals("") && !endDate.equals("")) { // -가게, 대여 날짜만 입력되었다
 				sql += " AND s.store_id = ? AND r.rental_date BETWEEN STR_TO_DATE(?, '%Y-%m-%d') AND STR_TO_DATE(?, '%Y-%m-%d') ORDER BY rental_date LIMIT ?, ?";
 				stmt = conn.prepareStatement(sql);
