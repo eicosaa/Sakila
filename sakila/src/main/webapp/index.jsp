@@ -15,6 +15,9 @@
 
 	<div>
 		<table class="table table-bordered text-center table-hover">
+				<tr class="table-active">
+					<td>Table List</td>
+				</tr>
 				<tr>
 					<td><a href = "<%= request.getContextPath() %>/storeList.jsp">Store List</a></td>
 				</tr>
@@ -22,6 +25,9 @@
 					<td><a href = "<%= request.getContextPath() %>/staffList.jsp">Staff List</a></td>
 				</tr>
 				<!-- view 7개 리스트 -->
+				<tr class="table-active">
+					<td>View List</td>
+				</tr>
 				<tr>
 					<td><a href = "<%= request.getContextPath() %>/actorInfoList.jsp">actorInfo List (view)</a></td>
 				</tr>
@@ -44,6 +50,9 @@
 					<td><a href = "<%= request.getContextPath() %>/staffListViewList.jsp">staffList List (view)</a></td>
 				</tr>
 				<!-- procedure 3개 결과 화면 -->
+				<tr class="table-active">
+					<td>프로시저 (procedure)</td>
+				</tr>
 				<tr>
 					<td><a href = "<%= request.getContextPath() %>/filmInStock.jsp">filmInStock (procedure)</a></td>
 				</tr>
@@ -52,6 +61,9 @@
 				</tr>
 				<tr>
 					<td><a href = "<%= request.getContextPath() %>/rewardsReport.jsp">rewardsReport (procedure)</a></td>
+				</tr>
+				<tr class="table-active">
+					<td>상세 검색 Detailed Search</td>
 				</tr>
 				<tr>
 					<td><a href = "<%= request.getContextPath() %>/filmSearchForm.jsp">필름 상세 검색</a></td>
