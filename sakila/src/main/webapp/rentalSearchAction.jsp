@@ -36,7 +36,7 @@
 	RentalDao rentalDao = new RentalDao();
 	List<Map<String, Object>> list = rentalDao.selectRentalSearchList(storeId, customerName, beginDate, endDate, beginRow, rowPerPage);
 	
-	int totalRow = rentalDao.rentalSearchTotalRow(storeId, customerName, beginDate, endDate); // -전체 행의 개수 
+	int totalRow = rentalDao.rentalSearchTotalRow(storeId, customerName, beginDate, endDate); // -전체 행의 개수  
 	int lastPage = (int)(Math.ceil((double)totalRow/(double)rowPerPage)); // -마지막 페이지 수
 	
 	// -디버깅 코드
@@ -100,13 +100,13 @@
 		<%
 			if(currentPage > 1) { 
 		%>
-				<a href="<%= request.getContextPath() %>/rentalSearchAction.jsp?currentPage=<%= currentPage - 1 %>&customerName=<%= customerName %>&storeId=<%= storeId %>&beginDate=<%= beginDate %>&endDate=<%= endDate %>" class="btn btn-outline-secondary">이전</a>
+				<a href="<%= request.getContextPath() %>/rentalSearchAction.jsp?currentPage=<%= currentPage - 1 %>&customerName=<%= customerName %>&storeId=<%= storeId %>&beginDate=<%= beginDate %>&endDate=<%= endDate %>" class = "btn btn-outline-secondary">이전</a>
 		<%		
 			} 
 		
 			if(currentPage < lastPage) {
 		%>
-				<a href="<%= request.getContextPath() %>/rentalSearchAction.jsp?currentPage=<%= currentPage + 1 %>&customerName=<%= customerName %>&storeId=<%= storeId %>&beginDate=<%= beginDate %>&endDate=<%= endDate %>" class="btn btn btn-outline-secondary">다음</a>
+				<a href="<%= request.getContextPath() %>/rentalSearchAction.jsp?currentPage=<%= currentPage + 1 %>&customerName=<%= customerName %>&storeId=<%= storeId %>&beginDate=<%= beginDate %>&endDate=<%= endDate %>" class = "btn btn btn-outline-secondary">다음</a>
 		<%		
 			}
 		%>

@@ -33,7 +33,7 @@ public class FilmListViewDao {
 			    	f.setTitle(rs.getString("title"));
 			    	f.setDescription(rs.getString("description"));
 			    	f.setCategory(rs.getString("category"));
-			    	f.setPrice(rs.getInt("price"));
+			    	f.setPrice(rs.getDouble("price"));
 			    	f.setLength(rs.getInt("length"));
 			    	f.setRating(rs.getString("rating"));
 			    	f.setActors(rs.getString("actors"));
